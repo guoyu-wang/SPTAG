@@ -652,7 +652,7 @@ auto t2 = std::chrono::high_resolution_clock::now();
 
 auto t3 = std::chrono::high_resolution_clock::now();
 
-LOG(SPTAG::Helper::LogLevel::LL_Debug, "Tree %d complete, time to build tree:%.2lf, time to compute tail neighbors:%.2lf\n", tree_id, GET_CHRONO_TIME(t1, t2), GET_CHRONO_TIME(t2, t3));
+// LOG(SPTAG::Helper::LogLevel::LL_Debug, "Tree %d complete, time to build tree:%.2lf, time to compute tail neighbors:%.2lf\n", tree_id, GET_CHRONO_TIME(t1, t2), GET_CHRONO_TIME(t2, t3));
 
         } // TPT loop
 
@@ -662,7 +662,7 @@ LOG(SPTAG::Helper::LogLevel::LL_Debug, "Tree %d complete, time to build tree:%.2
         // Copy results of batch from each GPU to CPU result set
         for(int gpuNum=0; gpuNum < NUM_GPUS; ++gpuNum) {
             CUDA_CHECK(cudaSetDevice(gpuNum));
-LOG(SPTAG::Helper::LogLevel::LL_Debug, "gpu:%d, copying results size %lu to results offset:%d*%d=%d\n", gpuNum, curr_batch_size[gpuNum], GPUPointOffset[gpuNum]+offset[gpuNum],RNG_SIZE, (GPUPointOffset[gpuNum]+offset[gpuNum])*RNG_SIZE);
+// LOG(SPTAG::Helper::LogLevel::LL_Debug, "gpu:%d, copying results size %lu to results offset:%d*%d=%d\n", gpuNum, curr_batch_size[gpuNum], GPUPointOffset[gpuNum]+offset[gpuNum],RNG_SIZE, (GPUPointOffset[gpuNum]+offset[gpuNum])*RNG_SIZE);
 
             size_t copy_size=COPY_BUFF_SIZE;
             for(int i=0; i<curr_batch_size[gpuNum]; i+=COPY_BUFF_SIZE) {
