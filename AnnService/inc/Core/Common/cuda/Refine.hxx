@@ -150,7 +150,7 @@ __device__ void removeDuplicatesAndCompact( ListElt<SUMTYPE>* listMem, int* list
     sortKeys[0] = 0;
   }
   else {
-    sortKeys[0] = (sortMem[0].id != listMem[threadIdx.x*(LISTCAP/NUM_THREADS) - 1].id); 
+    sortKeys[0] = (sortMem[0].id != listMem[threadIdx.x*(LISTCAP/NUM_THREADS) - 1].id);
   }
   for(int i=1; i<LISTCAP/NUM_THREADS; i++) {
     sortKeys[i] = (sortMem[i].id != sortMem[i-1].id);
@@ -247,7 +247,7 @@ __device__ void shrinkListRNG_sequential(Point<T,SUMTYPE,MAX_DIM>* d_points, int
             break;
 	  }
         }
-      } 
+      }
       if(good) nodes[count++] = item.id;
     }
     for(int j=count; j<KVAL;j++) nodes[j] = -1;
@@ -396,7 +396,7 @@ void refineGraphGPU(SPTAG::VectorIndex* index, Point<T,SUMTYPE,MAX_DIM>* d_point
   cudaMemcpy(d_candidates, candidates, dataSize*candidatesPerVector*sizeof(int), cudaMemcpyHostToDevice);
 
   auto t2 = std::chrono::high_resolution_clock::now();
-  LOG(SPTAG::Helper::LogLevel::LL_Info, "find candidates time (ms): %lld\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count());
+  // LOG(SPTAG::Helper::LogLevel::LL_Info, "find candidates time (ms): %lld\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count());
 
   // Use a number of batches of refinement to overlap CPU and GPU work (TODO)
   int NUM_BATCHES = 1;
@@ -414,13 +414,13 @@ void refineGraphGPU(SPTAG::VectorIndex* index, Point<T,SUMTYPE,MAX_DIM>* d_point
       refineBatch_kernel<T,SUMTYPE,MAX_DIM, REFINE_THREADS><<<REFINE_BLOCKS,REFINE_THREADS>>>(d_points, batch_size, i*batch_size, d_graph, d_candidates, listMem, candidatesPerVector, KVAL, refineDepth, metric);
       cudaError_t status = cudaDeviceSynchronize();
       if(status != cudaSuccess) {
-          LOG(SPTAG::Helper::LogLevel::LL_Error, "Refine error code:%d\n", status);
+          // LOG(SPTAG::Helper::LogLevel::LL_Error, "Refine error code:%d\n", status);
       }
     }
 
   }
   t2 = std::chrono::high_resolution_clock::now();
-  LOG(SPTAG::Helper::LogLevel::LL_Info, "GPU refine time (ms): %lld\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count());
+  // LOG(SPTAG::Helper::LogLevel::LL_Info, "GPU refine time (ms): %lld\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count());
 
   cudaFree(listMem);
   cudaFree(d_candidates);
