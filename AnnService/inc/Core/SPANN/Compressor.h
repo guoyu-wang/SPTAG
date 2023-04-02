@@ -5,8 +5,8 @@
 #define _SPTAG_SPANN_COMPRESSOR_H_
 
 #include <string>
-#include "zstd.h"
-#include "zdict.h"
+#include <zstd.h>
+#include <zdict.h>
 #include "../Common.h"
 
 namespace SPTAG
