@@ -31,9 +31,6 @@ if (CUDA_FOUND)
 
     include_directories(${PROJECT_SOURCE_DIR}/ThirdParty/zstd/lib)
 
-    add_library( libzstd SHARED IMPORTED )
-    set_target_properties( libzstd PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/ThirdParty/zstd/lib/libzstd.so )
-
     file(GLOB_RECURSE GPU_HDR_FILES ${AnnService}/inc/Core/*.h  ${AnnService}/inc/Helper/*.h ${AnnService}/inc/Core/Common/cuda/*)
     file(GLOB_RECURSE GPU_SRC_FILES ${AnnService}/src/Core/*.cpp ${AnnService}/src/Helper/*.cpp ${AnnService}/src/Core/Common/Kernel.cu)
 
@@ -55,16 +52,16 @@ if (CUDA_FOUND)
     endif()
 
     CUDA_ADD_LIBRARY(GPUSPTAGLib SHARED ${GPU_SRC_FILES} ${GPU_HDR_FILES})
-    target_link_libraries(GPUSPTAGLib DistanceUtils ${Boost_LIBRARIES} ${CUDA_LIBRARIES} libzstd)
+    target_link_libraries(GPUSPTAGLib DistanceUtils ${Boost_LIBRARIES} ${CUDA_LIBRARIES} libzstd_shared )
     target_compile_definitions(GPUSPTAGLib PRIVATE ${Definition})
 
     CUDA_ADD_LIBRARY(GPUSPTAGLibStatic STATIC ${GPU_SRC_FILES} ${GPU_HDR_FILES})
-    target_link_libraries(GPUSPTAGLibStatic DistanceUtils ${Boost_LIBRARIES} ${CUDA_LIBRARIES} libzstd)
+    target_link_libraries(GPUSPTAGLibStatic DistanceUtils ${Boost_LIBRARIES} ${CUDA_LIBRARIES} libzstd_static )
     target_compile_definitions(GPUSPTAGLibStatic PRIVATE ${Definition})
     add_dependencies(GPUSPTAGLibStatic GPUSPTAGLib)
 
     CUDA_ADD_EXECUTABLE(gpuindexbuilder ${AnnService}/src/IndexBuilder/main.cpp)
-    target_link_libraries(gpuindexbuilder GPUSPTAGLibStatic ${Boost_LIBRARIES} ${CUDA_LIBRARIES} libzstd)
+    target_link_libraries(gpuindexbuilder GPUSPTAGLibStatic ${Boost_LIBRARIES} ${CUDA_LIBRARIES})
     target_compile_definitions(gpuindexbuilder PRIVATE ${Definition})
 
     set(VECTORSEARCH_INC_DIR ${AnnService}/inc/SSDServing/VectorSearch)
@@ -82,7 +79,7 @@ if (CUDA_FOUND)
     endif()
 
     CUDA_ADD_EXECUTABLE(gpussdserving ${SSD_SERVING_HDR_FILES} ${SSD_SERVING_FILES})
-    target_link_libraries(gpussdserving GPUSPTAGLibStatic ${Boost_LIBRARIES} ${CUDA_LIBRARIES} libzstd)
+    target_link_libraries(gpussdserving GPUSPTAGLibStatic ${Boost_LIBRARIES} ${CUDA_LIBRARIES})
     target_compile_definitions(gpussdserving PRIVATE ${Definition} _exe)
 else()
     message (STATUS "Could not find cuda.")
